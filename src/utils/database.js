@@ -10,11 +10,10 @@ let pool;
 const initializePool = () => {
   if (!pool) {
     pool = new Pool({
-      host: process.env.DB_HOST,
-      port: process.env.DB_PORT,
-      database: process.env.DB_NAME,
-      user: process.env.DB_USER,
-      password: process.env.DB_PASSWORD,
+      connectionString: process.env.DATABASE_URL, // Use the Render/Heroku DATABASE_URL
+      ssl: {
+        rejectUnauthorized: false, // Required for Render / Heroku Postgres
+      },
       max: 20,
       idleTimeoutMillis: 30000,
       connectionTimeoutMillis: 2000,

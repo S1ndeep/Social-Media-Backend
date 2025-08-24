@@ -1,0 +1,36 @@
+const jwt = require("jsonwebtoken");
+const logger = require("./logger");
+
+/**
+ * Generate JWT token for user authentication
+ * @param {Object} payload - User data to encode in token
+ * @param {string} [expiresIn="24h"] - Expiration time for token
+ * @returns {string} JWT token
+ */
+const generateToken = (payload, expiresIn = "24h") => {
+  try {
+    return jwt.sign(payload, process.env.JWT_SECRET, { expiresIn });
+  } catch (error) {
+    logger.critical("Error generating token:", error.message);
+    throw new Error("Token generation failed");
+  }
+};
+
+/**
+ * Verify JWT token
+ * @param {string} token - JWT token to verify
+ * @returns {Object} Decoded token payload
+ */
+const verifyToken = (token) => {
+  try {
+    return jwt.verify(token, process.env.JWT_SECRET);
+  } catch (error) {
+    logger.critical("Token verification failed:", error.message);
+    throw new Error("Invalid or expired token");
+  }
+};
+
+module.exports = {
+  generateToken,
+  verifyToken,
+};
